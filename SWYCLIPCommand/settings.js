@@ -1,0 +1,22 @@
+﻿var settings = {
+  "Command": "!clip",
+  "SendToClipToTwitch": true,
+  "SendToClipToDiscord": false,
+  "TwitchResponse": "{0}",
+  "TwitchWhisperResponse": "{0}",
+  "DiscordResponse": "{0}",
+  "DiscordDMResponse": "{0}",
+  "UserCooldown": 30,
+  "ReponseUserCooldown": "/me @{0} the {1} command is on cooldown for another {2} seconds!",
+  "GlobalCooldown": 15,
+  "ReponseGlobalCooldown": "/me @{0} the {1} command is on a global cooldown for another {2} seconds!",
+  "CommandCost": 0,
+  "ReponseNotEnoughPoints": "/me @{0} you only have {1} {2}, you need {3} {2} to use the {4} command!",
+  "ReponseApiError": "/me Failed to Clip! API Error!",
+  "ReponseClientIDError": "/me Failed to get the Client ID!",
+  "ReponseNotLive": "/me @{0} the {1} command can only be used while the stream is live!",
+  "Permission": "Everyone",
+  "PermissionInfo": "",
+  "ReponseNotEnoughPermissions": "/me @{0} you do not have permission to use the {1} command!",
+  "oAuthToken": "oauth:000000000"
+};
