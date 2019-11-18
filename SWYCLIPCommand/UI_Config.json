@@ -1,27 +1,27 @@
 ﻿{
   "output_file": "settings.json",
-    "Command": {
+  "Command": {
     "type": "textbox",
     "value": "!clip",
-  	"label": "Command Name",
+    "label": "Command Name",
     "tooltip": "Command that will be used to make clips",
-  	"group": "Main Settings"
+    "group": "Main Settings"
   },
-    "SendToClipToTwitch": {
+  "SendToClipToTwitch": {
     "type": "checkbox",
     "value": true,
     "label": "Post Clip Links in Twitch Chat",
     "tooltip": "If this is not selected, the clip will still be made but not sent in the chat",
     "group": "Main Settings"
   },
-    "SendToClipToDiscord": {
+  "SendToClipToDiscord": {
     "type": "checkbox",
     "value": false,
     "label": "Post Clip Links in Discord Chat",
     "tooltip": "If this is not selected, the clip will still be made but not sent in the chat\r\nClips can only be posted in the discord channel you have set in your chatbot connections window. The current API is limited, sorry! Once the option for a custom channels is added, I will add it to the script.",
     "group": "Main Settings"
   },
-    "OpenClipsButton": {
+  "OpenClipsButton": {
     "type": "button",
     "label": "Clips Manager",
     "tooltip": "Open your Edit Clips Page on Twitch",
@@ -29,139 +29,140 @@
     "wsevent": "",
     "group": "Main Settings"
   },
-
-
-    "TwitchResponse": {
+  "TwitchResponse": {
     "type": "textbox",
     "value": "{0}",
     "label": "Twitch Chat Message",
     "tooltip": "The message that gets sent into the twitch chat\r\n{0} = Clip Link\r\n{1} = Viewer Name",
     "group": "Chat Response"
   },
-    "TwitchWhisperResponse": {
+  "TwitchWhisperResponse": {
     "type": "textbox",
     "value": "{0}",
     "label": "Twitch Whisper Response",
     "tooltip": "The reply that gets sent if a viewer whispers the bot\r\n{0} = Clip Link\r\n{1} = Viewer Name",
     "group": "Chat Response"
   },
-    "DiscordResponse": {
+  "DiscordResponse": {
     "type": "textbox",
     "value": "{0}",
     "label": "Discord Chat Message",
     "tooltip": "The message that will get sent into your discord chat\r\nYou can use discord text formatting as well\r\n{0} = Clip Link\r\n{1} = Viewer Name",
     "group": "Chat Response"
   },
-    "DiscordDMResponse": {
+  "DiscordDMResponse": {
     "type": "textbox",
     "value": "{0}",
     "label": "Discord DM Response",
     "tooltip": "The reply that gets sent if a viewer DM's the bot on discord\r\nYou can use discord text formatting as well\r\n{0} = Clip Link\r\n{1} = Viewer Name",
     "group": "Chat Response"
   },
-
-
-    "UserCooldown": {
+  "UserCooldown": {
     "type": "numberbox",
     "label": "User Cooldown (sec)",
     "value": 30,
     "tooltip": "Cooldown in seconds",
-	  "group": "Cooldowns"
+    "group": "Cooldowns"
   },
-    "ReponseUserCooldown": {
+  "ReponseUserCooldown": {
     "type": "textbox",
     "value": "/me @{0} the {1} command is on cooldown for another {2} seconds!",
-  	"label": "User Cooldown Response",
+    "label": "User Cooldown Response",
     "tooltip": "{0} = Viewers Name\r\n{1} = Command Name\r\n{2} = Time Remaing",
-  	"group": "Cooldowns"
+    "group": "Cooldowns"
   },
-    "GlobalCooldown": {
+  "GlobalCooldown": {
     "type": "numberbox",
     "label": "Global Cooldown (sec)",
     "value": 15,
     "tooltip": "Cooldown in seconds",
-	  "group": "Cooldowns"
+    "group": "Cooldowns"
   },
-    "ReponseGlobalCooldown": {
+  "ReponseGlobalCooldown": {
     "type": "textbox",
     "value": "/me @{0} the {1} command is on a global cooldown for another {2} seconds!",
-  	"label": "Global Cooldown Response",
+    "label": "Global Cooldown Response",
     "tooltip": "{0} = Viewers Name\r\n{1} = Command Name\r\n{2} = Time Remaing",
-  	"group": "Cooldowns"
+    "group": "Cooldowns"
   },
-
-
-    "CommandCost": {
+  "CommandCost": {
     "type": "numberbox",
     "value": 0,
     "label": "Command Cost",
     "tooltip": "The cost to use the command",
     "group": "Cost / Currency"
   },
-    "ReponseNotEnoughPoints": {
+  "ReponseNotEnoughPoints": {
     "type": "textbox",
     "value": "/me @{0} you only have {1} {2}, you need {3} {2} to use the {4} command!",
     "label": "Not Enough Currency Response",
     "tooltip": "{0} = Viewers Name\r\n{1} = Viewers Currency\r\n{2} = Curreny Name\r\n{3} = Command Cost\r\n{4} = Command Name",
     "group": "Cost / Currency"
   },
-
-
-    "ReponseApiError": {
+  "ReponseApiError": {
     "type": "textbox",
     "value": "/me Failed to Clip! API Error!",
     "label": "API Error Message",
     "tooltip": "The message to send when a clip can't be created\r\n{0} = Viewers Name\r\n{1} = Command Name",
     "group": "Error Messages"
   },
-    "ReponseClientIDError": {
+  "ReponseClientIDError": {
     "type": "textbox",
     "value": "/me Failed to get the Client ID!",
-  	"label": "Client ID Error Message",
+    "label": "Client ID Error Message",
     "tooltip": "The message to send when the client ID can't be found\r\n{0} = Viewers Name\r\n{1} = Command Name",
-  	"group": "Error Messages"
+    "group": "Error Messages"
   },
-    "ReponseNotLive": {
+  "ReponseNotLive": {
     "type": "textbox",
     "value": "/me @{0} the {1} command can only be used while the stream is live!",
-  	"label": "Stream Not Live Response",
+    "label": "Stream Not Live Response",
     "tooltip": "{0} = Viewers Name \r\n{1} = Command Name",
-  	"group": "Error Messages"
+    "group": "Error Messages"
   },
-
-
-    "Permission": {
+  "Permission": {
     "type": "dropdown",
     "value": "Everyone",
-    "items": ["Everyone","Regular","Subscriber","GameWisp Subscriber","User_Specific","Min_Rank","Min_Points","Min_Hours","Moderator","Editor","Caster"],
+    "items": [
+      "Everyone",
+      "Regular",
+      "Subscriber",
+      "VIP+",
+      "VIP Exclusive",
+      "User_Specific",
+      "Min_Rank",
+      "Min_Points",
+      "Min_Hours",
+      "Moderator",
+      "Editor",
+      "Caster"
+    ],
     "label": "Permission level",
     "tooltip": "Set the permission level for the command",
     "group": "Permissions"
   },
-    "PermissionInfo": {
+  "PermissionInfo": {
     "type": "textbox",
     "value": "",
     "label": "Permission level info",
     "tooltip": "Set the user, rank or tier for permission",
     "group": "Permissions"
   },
-    "ReponseNotEnoughPermissions": {
+  "ReponseNotEnoughPermissions": {
     "type": "textbox",
     "value": "/me @{0} you do not have permission to use the {1} command!",
-  	"label": "Not Enough Permissions Response",
+    "label": "Not Enough Permissions Response",
     "tooltip": "{0} = Viewers Name\r\n{1} = Command Name\r\n{2} = Command Permission\r\n{3} = Command Permissions Info",
-  	"group": "Permissions"
+    "group": "Permissions"
   },
-
-
-    "oAuthToken": {
+  "oAuthToken": {
     "type": "textbox",
     "value": "oauth:000000000",
-	  "label": "Streamers oAuth Token",
+    "label": "Streamers oAuth Token",
     "tooltip": "Streamers oAuth Token with 'clip:edit' scope",
-	  "group": "Required Info - KEEP HIDDEN"
+    "group": "Required Info - KEEP HIDDEN"
   },
-    "oAuthGen": {
+  "oAuthGen": {
     "type": "button",
     "label": "Gen Token",
     "tooltip": "Generate a oAuth Token for the Streamers account that contains the 'clip:edit' scope",
@@ -169,9 +170,7 @@
     "wsevent": "",
     "group": "Required Info - KEEP HIDDEN"
   },
-
-
-    "OpenFaqsPage": {
+  "OpenFaqsPage": {
     "type": "button",
     "label": "Clip FAQ's & Change Log",
     "tooltip": "Open the Clip Command FAQ's Page & Change Log",
@@ -179,19 +178,11 @@
     "wsevent": "",
     "group": "Support & Other Stuff"
   },
-    "OpenTwitchChannel": {
+  "OpenTwitchChannel": {
     "type": "button",
     "label": "SoWhoYou's Twitch Channel",
     "tooltip": "See who made this amazing script & maybe even subscribe?",
     "function": "OpenStream",
-    "wsevent": "",
-    "group": "Support & Other Stuff"
-  },
-    "OpenDisordServer": {
-    "type": "button",
-    "label": "Streamlabs Chatbot Discord",
-    "tooltip": "Open the Streamlabs Chatbot Community Discord Server",
-    "function": "OpenDiscord",
     "wsevent": "",
     "group": "Support & Other Stuff"
   }

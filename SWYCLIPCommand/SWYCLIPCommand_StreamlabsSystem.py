@@ -19,7 +19,7 @@ ScriptName = "Clip Command"
 Website = "https://www.sowhoyou.com"
 Description = "Create Clips via a Commmand!"
 Creator = "SoWhoYou"
-Version = "1.0.3.0"
+Version = "1.0.8.0"
 
 # Special Thanks to: @Ocgineer & @Brain for the assistance, ideas, tips & tricks.
 
@@ -46,8 +46,8 @@ class Settings(object):
 			self.PermissionInfo = ""
 			self.UserCooldown = 30
 			self.GlobalCooldown = 15
-			self.ReponseClientIDError = "/me Failed to Clip! ClientID Error!"
-			self.ReponseApiError = "/me Failed to Clip! API Error!"
+			self.ReponseClientIDError = "/me Failed to Clip! ClientID Error! - Generate a New Token in the Script and Make sure to save the Script Settings!"
+			self.ReponseApiError = "/me Failed to Clip! API Error! - Generate a New Token in the Script and Make sure to save the Script Settings!"
 			self.ReponseNotEnoughPoints = "/me @{0} you only have {1} {2}, you need {3} {2} to use the {4} command!"
 			self.ReponseNotEnoughPermissions = "/me @{0} you do not have permission to use the {1} command!"
 			self.ReponseGlobalCooldown = "/me @{0} the {1} command is on a global cooldown for another {2} seconds!"
@@ -104,18 +104,132 @@ def OpenClips():
 
 #---------------------------------------
 
-def OpenDiscord():
-	os.startfile("https://discordapp.com/invite/J4QMG5m")
-	return
-
-#---------------------------------------
-
 def Init():
 	global ScriptSettings
 	ScriptSettings = Settings(SettingsFile)
 	return
 
-#---------------------------------------
+#--------------------------------------- SendAllGood
+
+def SendAllGood(data):
+	Parent.AddUserCooldown(ScriptName, ScriptSettings.Command, data.User, ScriptSettings.UserCooldown)
+	Parent.AddCooldown(ScriptName, ScriptSettings.Command, ScriptSettings.GlobalCooldown)
+	holder = GetClip(data) # Prevents duplicates when sending to discord
+	if data.IsWhisper(): # Is Whisper
+		if data.IsFromTwitch():
+			Parent.SendTwitchWhisper(data.User, ScriptSettings.TwitchWhisperResponse.format(holder, data.User))
+		else: # Is Discord Response
+			if ScriptSettings.SendToClipToDiscord:
+				Parent.SendDiscordDM(data.User, ScriptSettings.DiscordDMResponse.format(holder, data.User))
+	else: # Not a Whisper
+		if data.IsFromTwitch():
+			if ScriptSettings.SendToClipToDiscord:
+				Parent.SendDiscordMessage(ScriptSettings.DiscordResponse.format(holder, data.User))
+			if ScriptSettings.SendToClipToTwitch:
+				Parent.SendTwitchMessage(ScriptSettings.TwitchResponse.format(holder, data.User))
+		else: # Is Discord Whisper Response
+			if ScriptSettings.SendToClipToDiscord:
+				Parent.SendDiscordMessage(ScriptSettings.DiscordResponse.format(holder, data.User))
+			if ScriptSettings.SendToClipToTwitch:
+				Parent.SendTwitchMessage(ScriptSettings.TwitchResponse.format(holder, data.User))
+
+#--------------------------------------- SendNoMoney
+
+def SendNoMoney(data):
+	if data.IsWhisper(): # Is Whisper
+		if data.IsFromTwitch():
+			Parent.SendTwitchWhisper(data.User, ScriptSettings.ReponseNotEnoughPoints.format(
+			data.User, Parent.GetPoints(data.User), Parent.GetCurrencyName(), ScriptSettings.CommandCost, ScriptSettings.Command))
+		else: # Is Discord Response
+			if ScriptSettings.SendToClipToDiscord:
+				Parent.SendDiscordDM(data.User, ScriptSettings.ReponseNotEnoughPoints.format(
+				data.User, Parent.GetPoints(data.User), Parent.GetCurrencyName(), ScriptSettings.CommandCost, ScriptSettings.Command))
+	else: # Not a Whisper Message
+		if data.IsFromTwitch():
+			Parent.SendTwitchMessage(ScriptSettings.ReponseNotEnoughPoints.format(
+			data.User, Parent.GetPoints(data.User), Parent.GetCurrencyName(), ScriptSettings.CommandCost, ScriptSettings.Command))
+		else: # Is Discord Response
+			if ScriptSettings.SendToClipToDiscord:
+				Parent.SendDiscordMessage(ScriptSettings.ReponseNotEnoughPoints.format(
+				data.User, Parent.GetPoints(data.User), Parent.GetCurrencyName(), ScriptSettings.CommandCost, ScriptSettings.Command))
+
+#--------------------------------------- SendCooldown
+
+def SendCooldown(data):
+	if data.IsWhisper(): # Is Whisper
+		if data.IsFromTwitch():
+			Parent.SendTwitchWhisper(data.User, ScriptSettings.ReponseUserCooldown.format(
+			data.User, ScriptSettings.Command, Parent.GetUserCooldownDuration(ScriptName, ScriptSettings.Command, data.User)))
+		else: # Is Discord Response
+			if ScriptSettings.SendToClipToDiscord:
+				Parent.SendDiscordDM(data.User, ScriptSettings.ReponseUserCooldown.format(
+				data.User, ScriptSettings.Command, Parent.GetUserCooldownDuration(ScriptName, ScriptSettings.Command, data.User)))
+	else: # Not a Whisper Message
+		if data.IsFromTwitch():
+			Parent.SendTwitchMessage(ScriptSettings.ReponseUserCooldown.format(
+			data.User, ScriptSettings.Command, Parent.GetUserCooldownDuration(ScriptName, ScriptSettings.Command, data.User)))
+		else: # Is Discord Response
+			if ScriptSettings.SendToClipToDiscord:
+				Parent.SendDiscordMessage(ScriptSettings.ReponseUserCooldown.format(
+				data.User, ScriptSettings.Command, Parent.GetUserCooldownDuration(ScriptName, ScriptSettings.Command, data.User)))
+
+#---------------------------------------- SendGlobalCooldown
+
+def SendGlobalCooldown(data):
+	if data.IsWhisper(): # Is Whisper
+		if data.IsFromTwitch():
+			Parent.SendTwitchWhisper(data.User, ScriptSettings.ReponseGlobalCooldown.format(
+				data.User, ScriptSettings.Command, Parent.GetCooldownDuration(ScriptName, ScriptSettings.Command)))
+		else: # Is Discord Response
+			if ScriptSettings.SendToClipToDiscord:
+				Parent.SendDiscordDM(data.User, ScriptSettings.ReponseGlobalCooldown.format(
+				data.User, ScriptSettings.Command, Parent.GetCooldownDuration(ScriptName, ScriptSettings.Command)))
+	else: # Not a Whisper Message
+		if data.IsFromTwitch():
+			Parent.SendTwitchMessage(ScriptSettings.ReponseGlobalCooldown.format(
+			data.User, ScriptSettings.Command, Parent.GetCooldownDuration(ScriptName, ScriptSettings.Command)))
+		else: # Is Discord Response
+			if ScriptSettings.SendToClipToDiscord:
+				Parent.SendDiscordMessage(ScriptSettings.ReponseGlobalCooldown.format(
+				data.User, ScriptSettings.Command, Parent.GetCooldownDuration(ScriptName, ScriptSettings.Command)))
+
+#---------------------------------------- SendNotEnounghPerms
+
+def SendNotEnounghPerms(data):
+	if data.IsWhisper(): # Is Whisper
+		if data.IsFromTwitch():
+			Parent.SendTwitchWhisper(data.User, ScriptSettings.ReponseNotEnoughPermissions.format(
+				data.User, ScriptSettings.Command, ScriptSettings.Permission, ScriptSettings.PermissionInfo))
+		else: # Is Discord Response
+			if ScriptSettings.SendToClipToDiscord:
+				Parent.SendDiscordDM(data.User, ScriptSettings.ReponseNotEnoughPermissions.format(
+				data.User, ScriptSettings.Command, ScriptSettings.Permission, ScriptSettings.PermissionInfo))
+	else: # Not a Whisper Message
+		if data.IsFromTwitch():
+			Parent.SendTwitchMessage(ScriptSettings.ReponseNotEnoughPermissions.format(
+			data.User, ScriptSettings.Command, ScriptSettings.Permission, ScriptSettings.PermissionInfo))
+		else: # Is Discord Response
+			if ScriptSettings.SendToClipToDiscord:
+				Parent.SendDiscordMessage(ScriptSettings.ReponseNotEnoughPermissions.format(
+				data.User, ScriptSettings.Command, ScriptSettings.Permission, ScriptSettings.PermissionInfo))
+
+#---------------------------------------- SendNotLive
+
+def SendNotLive(data):
+	if data.IsWhisper(): # Is Whisper
+		if data.IsFromTwitch():
+			Parent.SendTwitchWhisper(data.User, ScriptSettings.ReponseNotLive.format(data.User, ScriptSettings.Command))
+		else: # Is Discord Response
+			if ScriptSettings.SendToClipToDiscord:
+				Parent.SendDiscordDM(data.User, ScriptSettings.ReponseNotLive.format(data.User, ScriptSettings.Command))
+	else: # Not a Whisper Message
+		if data.IsFromTwitch():
+			Parent.SendTwitchMessage(ScriptSettings.ReponseNotLive.format(data.User, ScriptSettings.Command))
+		else: # Is Discord Response
+			if ScriptSettings.SendToClipToDiscord:
+				Parent.SendDiscordMessage(ScriptSettings.ReponseNotLive.format(data.User, ScriptSettings.Command))
+
+#---------------------------------------- Execute
 
 def Execute(data):
 	if data.IsChatMessage() and data.GetParam(0).lower() == ScriptSettings.Command:
@@ -123,57 +237,18 @@ def Execute(data):
 			if Parent.HasPermission(data.User, ScriptSettings.Permission, ScriptSettings.PermissionInfo): # Has Permissions
 				if not Parent.IsOnCooldown(ScriptName, ScriptSettings.Command): # Not Global Cooldown
 					if not Parent.IsOnUserCooldown(ScriptName, ScriptSettings.Command, data.User): # Not User Cooldown
-						if Parent.RemovePoints(data.User, ScriptSettings.CommandCost): # Remove/Check Currency
-							Parent.AddUserCooldown(ScriptName, ScriptSettings.Command, data.User, ScriptSettings.UserCooldown)
-							Parent.AddCooldown(ScriptName, ScriptSettings.Command, ScriptSettings.GlobalCooldown)
-							holder = GetClip(data) # Prevents duplicates when sending to discord
-							if data.IsWhisper():
-								if data.IsFromTwitch():
-									Parent.SendTwitchWhisper(data.User, ScriptSettings.TwitchWhisperResponse.format(holder, data.User))
-								else: # Is Discord Response
-									Parent.SendDiscordDM(data.User, ScriptSettings.DiscordDMResponse.format(holder, data.User))
-							else: # Not a Whisper
-								if ScriptSettings.TwitchResponse:
-									Parent.SendTwitchMessage(ScriptSettings.TwitchResponse.format(holder, data.User))
-								if ScriptSettings.SendToClipToDiscord:
-									Parent.SendDiscordMessage(ScriptSettings.DiscordResponse.format(holder, data.User))
+						if Parent.RemovePoints(data.User, ScriptSettings.CommandCost) or ScriptSettings.CommandCost == 0: # Remove/Check Currency Updated
+							SendAllGood(data)
 						else: # Not Enought Curreny Response
-							Parent.SendTwitchMessage(ScriptSettings.ReponseNotEnoughPoints.format(
-							data.User, Parent.GetPoints(data.User), Parent.GetCurrencyName(), ScriptSettings.CommandCost, ScriptSettings.Command))
+							SendNoMoney(data)
 					else: # User Cooldown Response
-						if data.IsWhisper():
-							if data.IsFromTwitch():
-								Parent.SendTwitchWhisper(data.User, ScriptSettings.ReponseUserCooldown.format(
-								data.User, ScriptSettings.Command, Parent.GetUserCooldownDuration(ScriptName, ScriptSettings.Command)))
-							else: # Is Discord Response
-								Parent.SendDiscordDM(data.User, ScriptSettings.ReponseUserCooldown.format(
-								data.User, ScriptSettings.Command, Parent.GetUserCooldownDuration(ScriptName, ScriptSettings.Command)))
-						else: # Not a Whisper Message
-							if data.IsFromTwitch():
-								Parent.SendTwitchMessage(ScriptSettings.ReponseUserCooldown.format(
-								data.User, ScriptSettings.Command, Parent.GetUserCooldownDuration(ScriptName, ScriptSettings.Command)))
-							else: # Is Discord Response
-								Parent.SendTwitchMessage(ScriptSettings.ReponseUserCooldown.format(
-								data.User, ScriptSettings.Command, Parent.GetUserCooldownDuration(ScriptName, ScriptSettings.Command)))
+						SendUserCooldown(data)
 				else: # Global Cooldown Response
-					if data.IsWhisper():
-						if data.IsFromTwitch():
-							Parent.SendTwitchWhisper(data.User, ScriptSettings.ReponseGlobalCooldown.format(
-								data.User, ScriptSettings.Command, Parent.GetCooldownDuration(ScriptName, ScriptSettings.Command)))
-						else: # Is Discord Response
-							Parent.SendDiscordDM(data.User, ScriptSettings.ReponseGlobalCooldown.format(
-								data.User, ScriptSettings.Command, Parent.GetCooldownDuration(ScriptName, ScriptSettings.Command)))
-					else: # Not a Whisper Message
-						if data.IsFromTwitch():
-							Parent.SendTwitchMessage(ScriptSettings.ReponseGlobalCooldown.format(
-						data.User, ScriptSettings.Command, Parent.GetCooldownDuration(ScriptName, ScriptSettings.Command)))
-						else: # Is Discord Response
-							Parent.SendTwitchMessage(ScriptSettings.ReponseGlobalCooldown.format(
-						data.User, ScriptSettings.Command, Parent.GetCooldownDuration(ScriptName, ScriptSettings.Command)))
+					SendGlobalCooldown(data)
 			else: # Not Enough Permissions Response
-				Parent.SendTwitchMessage(ScriptSettings.ReponseNotEnoughPermissions.format(data.User, ScriptSettings.Command, ScriptSettings.Permission, ScriptSettings.PermissionInfo))
+				SendNotEnounghPerms(data)
 		else: # Not Live Response
-			Parent.SendTwitchMessage(ScriptSettings.ReponseNotLive.format(data.User, ScriptSettings.Command))
+			SendNotLive(data)
 	return
  
 #---------------------------------------
